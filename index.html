@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panadería El Moyetón | Pan Artesanal y Hojaldres</title>
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Chatbot Botpress -->
+  <script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/11/22/06/20261122062141-DNHJM8P3.js" defer></script>
+
+  <!-- Start of HubSpot Embed Code -->
+  <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/52259334.js"></script>
+  <!-- End of HubSpot Embed Code -->
+</head>
+<body>
+
+  <!-- Contenedor de notificaciones flotantes -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Barra de navegación -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <div class="brand">
+        <h1>Panadería El Moyetón</h1>
+        <p>Horneadas: 7:00 AM y 5:00 PM · Lunes a Domingo 6:30 AM – 9:30 PM</p>
+      </div>
+      <nav class="nav-links">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#eventos">Eventos</a>
+        <a href="#nosotros">Nosotros</a>
+        <button id="btn-carrito-nav" class="btn-cart" onclick="toggleCarrito()">
+          <span>Carrito</span>
+          <span id="contador-carrito" class="cart-badge">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Banner Principal (Hero) -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-text animate-hero">
+        <span class="pill-badge">Pan artesanal recién salido del horno</span>
+        <h2>Aparta tus conchas y hojaldras antes de que se terminen</h2>
+        <p>
+          Recoge sin fila en sucursal (Click &amp; Collect) o recibe a domicilio.
+          Envío local gratis en pedidos desde <strong>$200 MXN</strong>.
+        </p>
+        <div class="hero-actions">
+          <a href="#catalogo" class="btn-primary">Ver pan del día</a>
+          <button class="btn-outline" onclick="window.botpress?.open()">
+            Pedir cupón 10% en el chat
+          </button>
+        </div>
+      </div>
+
+      <aside class="schedule-card animate-hero delay-1">
+        <h3>Horarios de Horneado</h3>
+        <div class="schedule-row">
+          <span>Horneada Matutina</span>
+          <strong>7:00 AM</strong>
+        </div>
+        <div class="schedule-row">
+          <span>Horneada Vespertina</span>
+          <strong>5:00 PM</strong>
+        </div>
+        <p class="schedule-note">
+          ¿Cotización para oficina o evento? Abre el asistente virtual o arma tu charola abajo.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <main id="catalogo" class="container catalog-section">
+    <div class="catalog-header reveal">
+      <div>
+        <h2>Catálogo del Día</h2>
+        <p>Inventario sincronizado en tiempo real con el ERP de Panadería El Moyetón</p>
+      </div>
+      <div id="filtros" class="filter-bar">
+        <button class="filtro-btn active" onclick="filtrar('Todos')">Todos</button>
+        <button class="filtro-btn" onclick="filtrar('Pan Dulce')">Pan Dulce</button>
+        <button class="filtro-btn" onclick="filtrar('Hojaldres y Salados')">Hojaldres y Salados</button>
+        <button class="filtro-btn" onclick="filtrar('Especialidades y Bebidas')">Especialidades y Bebidas</button>
+        <button class="filtro-btn" onclick="filtrar('Paquetes')">Paquetes</button>
+      </div>
+    </div>
+
+    <div id="grid-productos" class="products-grid"></div>
+  </main>
+
+  <!-- Sección Nosotros y Eventos -->
+  <section id="eventos" class="about-section">
+    <div id="nosotros" class="container about-grid">
+      <div class="about-text reveal">
+        <h3>Sobre El Moyetón</h3>
+        <p>
+          Elaboramos pan tradicional con mantequilla real, fermentación lenta y rellenos preparados diariamente en nuestro obrador. Cada compra en línea descuenta existencias en nuestro almacén y registra tu seguimiento comercial de forma automática.
+        </p>
+      </div>
+      <div class="promo-box reveal">
+        <h4>¿Necesitas charolas para eventos o un cupón del 10%?</h4>
+        <p>
+          Abre el asistente virtual en la esquina inferior derecha, déjanos tu nombre, correo y teléfono, y registraremos tu solicitud automáticamente en nuestro CRM.
+        </p>
+        <button class="btn-dark" onclick="window.botpress?.open()">
+          Abrir asistente virtual
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Panel lateral del Carrito -->
+  <div id="modal-carrito" class="drawer-backdrop" onclick="cerrarSiClickFuera(event)">
+    <aside class="drawer-panel">
+      <div class="drawer-header">
+        <h3>Tu Pedido</h3>
+        <button class="btn-close" onclick="toggleCarrito()">&times;</button>
+      </div>
+
+      <div id="lista-carrito" class="cart-items"></div>
+
+      <div class="cart-summary">
+        <div class="summary-line"><span>Subtotal:</span><span id="subtotal">$0.00</span></div>
+        <div class="summary-line"><span>Envío:</span><span id="envio">$0.00</span></div>
+        <div class="summary-total"><span>Total MXN:</span><span id="total">$0.00</span></div>
+      </div>
+
+      <form id="form-pedido" class="checkout-form" onsubmit="enviarPedido(event)">
+        <div class="form-group">
+          <label for="cliente-nombre">Nombre completo *</label>
+          <input type="text" id="cliente-nombre" required placeholder="Ej. Ana López" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cliente-correo">Correo electrónico *</label>
+            <input type="email" id="cliente-correo" required placeholder="ana@correo.com" />
+          </div>
+          <div class="form-group">
+            <label for="cliente-telefono">Teléfono / WhatsApp *</label>
+            <input type="tel" id="cliente-telefono" required placeholder="9811234567" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tipo-entrega">Entrega</label>
+            <select id="tipo-entrega" onchange="renderCarrito()">
+              <option value="Sucursal">Recoger en sucursal ($0)</option>
+              <option value="Domicilio">Envío local ($25 / Gratis +$200)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="metodo-pago">Método de pago</label>
+            <select id="metodo-pago">
+              <option value="Efectivo contra entrega">Efectivo</option>
+              <option value="Transferencia bancaria">Transferencia</option>
+              <option value="Tarjeta en línea">Tarjeta en línea</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-confirmar" class="btn-submit">
+          Confirmar Compra
+        </button>
+      </form>
+
+      <div id="resultado-pedido" class="order-feedback hidden"></div>
+    </aside>
+  </div>
+
+  <!-- Lógica y animaciones JS -->
+  <script src="app.js" defer></script>
+</body>
+</html>
